@@ -1,104 +1,124 @@
-📦 AirBnB Clone - The Console (MySQL + ORM)
-📌 Description
-This project is a continuation of the AirBnB clone project and aims to implement the database storage engine using MySQL and SQLAlchemy. It introduces the use of environment variables, ORM (Object Relational Mapping), and allows switching between file storage and database storage using the same codebase. The application supports two environments: dev and test, and is structured to support a future production setup.
+<center> <h1>HBNB - The Console</h1> </center>
 
-🛠️ Technologies Used
-Python 3.8.5
+This repository contains the initial stage of a student project to build a clone of the AirBnB website. This stage implements a backend interface, or console, to manage program data. Console commands allow the user to create, update, and destroy objects, as well as manage file storage. Using a system of JSON serialization/deserialization, storage is persistent between sessions.
 
-MySQL 8.0
+---
+<center> <h2>General Use</h2> </center>
 
-SQLAlchemy 1.4.x
+1. First clone this repository.
 
-Ubuntu 20.04 LTS
+3. Once the repository is cloned locate the "console.py" file and run it as follows:
+```
+/alu-AirBnB_clone_v2 ./console.py
+```
+4. When this command is run the following prompt should appear:
+```
+(hbnb)
+```
+5. This prompt designates you are in the "HBnB" console. There are a variety of commands available within the console program.
 
-unittest for testing
+##### Commands
+    * create - Creates an instance based on given class
 
-pycodestyle for linting
+    * destroy - Destroys an object based on class and UUID
 
-🧠 Learning Objectives
-By completing this project, you should be able to:
+    * show - Shows an object based on class and UUID
 
-Understand and implement unit testing in large-scale projects.
+    * all - Shows all objects the program has access to, or all objects of a given class
 
-Use args and kwargs effectively in Python.
+    * update - Updates existing attributes an object based on class name and UUID
 
-Manage function arguments by name.
+    * quit - Exits the program (EOF will as well)
 
-Set up and manage MySQL databases and users.
 
-Grasp the concept of ORM and apply it using SQLAlchemy.
+##### Alternative Syntax
+Users are able to issue a number of console command using an alternative syntax:
 
-Map Python classes to SQL tables.
+	Usage: <class_name>.<command>([<id>[name_arg value_arg]|[kwargs]])
+Advanced syntax is implemented for the following commands: 
 
-Handle different storage engines with a unified codebase.
+    * all - Shows all objects the program has access to, or all objects of a given class
 
-Work with environment variables for project configuration.
+	* count - Return number of object instances by class
 
-🔧 Environment Variables
-These variables control the app configuration and database connection:
+    * show - Shows an object based on class and UUID
 
-bash
-Copy
-Edit
-export HBNB_ENV=dev
-export HBNB_MYSQL_USER=hbnb_dev
-export HBNB_MYSQL_PWD=hbnb_dev_pwd
-export HBNB_MYSQL_HOST=localhost
-export HBNB_MYSQL_DB=hbnb_dev_db
-export HBNB_TYPE_STORAGE=db
-🏗️ Project Structure
-plaintext
-Copy
-Edit
-.
-├── models/
-│   ├── base_model.py
-│   ├── engine/
-│   │   ├── file_storage.py
-│   │   └── db_storage.py
-├── tests/
-│   ├── test_models/
-│   │   ├── test_base_model.py
-│   │   └── test_engine/
-│   │       └── test_db_storage.py
-├── console.py
-├── setup_mysql_dev.sql
-├── setup_mysql_test.sql
-└── README.md
-🧪 Running Tests
-To run all tests:
+	* destroy - Destroys an object based on class and UUID
 
-bash
-Copy
-Edit
-python3 -m unittest discover tests
-To run a specific test file:
+    * update - Updates existing attributes an object based on class name and UUID
 
-bash
-Copy
-Edit
-python3 -m unittest tests/test_models/test_base_model.py
-🗄️ Storage Engines
-The project supports two storage engines:
+<br>
+<br>
+<center> <h2>Examples</h2> </center>
+<h3>Primary Command Syntax</h3>
 
-FileStorage (HBNB_TYPE_STORAGE=file): Saves objects to a JSON file.
+###### Example 0: Create an object
+Usage: create <class_name>
+```
+(hbnb) create BaseModel
+```
+```
+(hbnb) create BaseModel
+3aa5babc-efb6-4041-bfe9-3cc9727588f8
+(hbnb)                   
+```
+###### Example 1: Show an object
+Usage: show <class_name> <_id>
 
-DBStorage (HBNB_TYPE_STORAGE=db): Uses MySQL and SQLAlchemy ORM for object persistence.
+```
+(hbnb) show BaseModel 3aa5babc-efb6-4041-bfe9-3cc9727588f8
+[BaseModel] (3aa5babc-efb6-4041-bfe9-3cc9727588f8) {'id': '3aa5babc-efb6-4041-bfe9-3cc9727588f8', 'created_at': datetime.datetime(2020, 2, 18, 14, 21, 12, 96959), 
+'updated_at': datetime.datetime(2020, 2, 18, 14, 21, 12, 96971)}
+(hbnb)  
+```
+###### Example 2: Destroy an object
+Usage: destroy <class_name> <_id>
+```
+(hbnb) destroy BaseModel 3aa5babc-efb6-4041-bfe9-3cc9727588f8
+(hbnb) show BaseModel 3aa5babc-efb6-4041-bfe9-3cc9727588f8
+** no instance found **
+(hbnb)   
+```
+###### Example 3: Update an object
+Usage: update <class_name> <_id>
+```
+(hbnb) update BaseModel b405fc64-9724-498f-b405-e4071c3d857f first_name "person"
+(hbnb) show BaseModel b405fc64-9724-498f-b405-e4071c3d857f
+[BaseModel] (b405fc64-9724-498f-b405-e4071c3d857f) {'id': 'b405fc64-9724-498f-b405-e4071c3d857f', 'created_at': datetime.datetime(2020, 2, 18, 14, 33, 45, 729889), 
+'updated_at': datetime.datetime(2020, 2, 18, 14, 33, 45, 729907), 'first_name': 'person'}
+(hbnb)
+```
+<h3>Alternative Syntax</h3>
 
-🐘 SQL Setup
-Create the development database and user:
+###### Example 0: Show all User objects
+Usage: <class_name>.all()
+```
+(hbnb) User.all()
+["[User] (99f45908-1d17-46d1-9dd2-b7571128115b) {'updated_at': datetime.datetime(2020, 2, 19, 21, 47, 34, 92071), 'id': '99f45908-1d17-46d1-9dd2-b7571128115b', 'created_at': datetime.datetime(2020, 2, 19, 21, 47, 34, 92056)}", "[User] (98bea5de-9cb0-4d78-8a9d-c4de03521c30) {'updated_at': datetime.datetime(2020, 2, 19, 21, 47, 29, 134362), 'id': '98bea5de-9cb0-4d78-8a9d-c4de03521c30', 'created_at': datetime.datetime(2020, 2, 19, 21, 47, 29, 134343)}"]
+```
 
-sql
-Copy
-Edit
--- setup_mysql_dev.sql
--- This script creates the development database and user with privileges.
-
-CREATE DATABASE IF NOT EXISTS hbnb_dev_db;
-CREATE USER IF NOT EXISTS 'hbnb_dev'@'localhost' IDENTIFIED BY 'hbnb_dev_pwd';
-GRANT ALL PRIVILEGES ON hbnb_dev_db.* TO 'hbnb_dev'@'localhost';
-FLUSH PRIVILEGES;
-Repeat with changes for test environment in setup_mysql_test.sql.
-
-✨ Authors
-Group project by allia-wase
+###### Example 1: Destroy a User
+Usage: <class_name>.destroy(<_id>)
+```
+(hbnb) User.destroy("99f45908-1d17-46d1-9dd2-b7571128115b")
+(hbnb)
+(hbnb) User.all()
+(hbnb) ["[User] (98bea5de-9cb0-4d78-8a9d-c4de03521c30) {'updated_at': datetime.datetime(2020, 2, 19, 21, 47, 29, 134362), 'id': '98bea5de-9cb0-4d78-8a9d-c4de03521c30', 'created_at': datetime.datetime(2020, 2, 19, 21, 47, 29, 134343)}"]
+```
+###### Example 2: Update User (by attribute)
+Usage: <class_name>.update(<_id>, <attribute_name>, <attribute_value>)
+```
+(hbnb) User.update("98bea5de-9cb0-4d78-8a9d-c4de03521c30", name "Todd the Toad")
+(hbnb)
+(hbnb) User.all()
+(hbnb) ["[User] (98bea5de-9cb0-4d78-8a9d-c4de03521c30) {'updated_at': datetime.datetime(2020, 2, 19, 21, 47, 29, 134362), 'id': '98bea5de-9cb0-4d78-8a9d-c4de03521c30', 'name': 'Todd the Toad', 'created_at': datetime.datetime(2020, 2, 19, 21, 47, 29, 134343)}"]
+```
+###### Example 3: Update User (by dictionary)
+Usage: <class_name>.update(<_id>, <dictionary>)
+```
+(hbnb) User.update("98bea5de-9cb0-4d78-8a9d-c4de03521c30", {'name': 'Fred the Frog', 'age': 9})
+(hbnb)
+(hbnb) User.all()
+(hbnb) ["[User] (98bea5de-9cb0-4d78-8a9d-c4de03521c30) {'updated_at': datetime.datetime(2020, 2, 19, 21, 47, 29, 134362), 'name': 'Fred the Frog', 'age': 9, 'id': '98bea5de-9cb0-4d78-8a9d-c4de03521c30', 'created_at': datetime.datetime(2020, 2, 19, 21, 47, 29, 134343)}"]
+```
+<br>
